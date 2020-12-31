@@ -2,7 +2,7 @@
 Code for answering questions on Reddit
 
 # What is the purpose of this repository?
-The purpose of this repository is to keep a record of all the code I write as part of helping people on the [Reddit website](https://reddit.com) in the various subreddits dedicated to the [he R Project for Statistical Computing](https://www.r-project.org/). As of this edit, the Reddit R groups I follow are shown here.
+The purpose of this repository is to keep a record of all the code I write as part of helping people on the [Reddit website](https://reddit.com) in the various subreddits dedicated to the [R Project for Statistical Computing](https://www.r-project.org/). As of this edit, the Reddit R groups I follow are shown here.
 1. [/r/rprogramming](https://www.reddit.com/r/rprogramming/)
 1. [/r/rlanguage](https://www.reddit.com/r/Rlanguage/)
 1. [/r/rstats](https://www.reddit.com/r/rstats/)
