@@ -1,0 +1,90 @@
+---
+title: "Reddit - Generating a Frequency Table"
+author: "thaufas"
+date: "3/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+**Source**: <https://www.reddit.com/r/Rlanguage/comments/t61r9n/can_somebody_please_help_part_of_a_quality/>
+
+## Option 1 - Using only `base R` Functions
+
+### Pros
+
+* Uses only `base R`
+
+* Code is very simple to understand
+
+### Cons
+
+* Code is not rugged
+
+```{r, eval=TRUE, echo=TRUE}
+datFile <- "2022-03-03_010_100_Generate_Freq_Table_Data.txt"
+
+dat2 <- as.numeric(readr::read_lines(datFile))
+
+table(dat2)
+```
+
+## Option 2 - Using `tidyverse` Packages
+
+### Pros
+
+* Coding logic isn't as simple as that shown in Option 1, but it's still easy to understand
+
+* This code is more rugged than what is shown in Option 1, which has multiple advantages.
+
+   * The *pipeline* nature of the `tidyverse` enables easy extension of the code without worrying about breaking something.
+   
+   * If the code is modified, errors are more likely to be caught &emdash; even without writing explicit checks &mdash; because the `tidyverse` generally has *strong type checking*.
+
+### Cons
+
+* Requires installing packages to extend R's base functionality
+
+```{r, eval=TRUE}
+library(readr)
+library(dplyr)
+
+datFile <- "2022-03-03_010_100_Generate_Freq_Table_Data.txt"
+
+dat1 <- readr::read_fwf(
+  file = datFile,
+  col_positions = readr::fwf_cols(vals = 4),
+  col_types = cols(readr::col_double()),
+  trim_ws = TRUE
+)
+
+dat2 <- dat1 |>
+  group_by(vals) |> 
+  summarise(n = n())
+```
+
+```{r, echo=FALSE}
+library(kableExtra)
+
+dat2 |>
+  kableExtra::kbl() |> 
+  kableExtra::kable_styling(
+    bootstrap_options = c("bordered", "hover", "responsive", "striped"),
+    full_width = FALSE
+  )
+```
+
+## Data Files
+
+The contents of the file named ```r datFile```, which contains the raw data, are shown here.
+
+```{r, results = 'asis', echo=FALSE}
+dat <- readLines(datFile)
+
+cat(paste0("     ", dat, collapse = "\n"))
+```
+
+<div style="margin: 1em 0 5em 0">
+</div>

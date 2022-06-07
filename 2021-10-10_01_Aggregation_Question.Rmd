@@ -1,0 +1,109 @@
+---
+title: "Reddit Question - Aggregation"
+author: "thaufas"
+date: "10/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Overview
+**Source**: [Reddit.com/r/Rlanguage | Noob question: how do I combine data? ](https://www.reddit.com/r/Rlanguage/comments/q54d0k/noob_question_how_do_i_combine_data/)
+
+### Step 1: Build a Data Set for Testing
+
+```{r BuildDataSet}
+
+library(tibble)
+
+numRows <- 30
+careerChoiceRanks <- c("1st", "2nd", "3rd+", "Others")
+set.seed(2^8 + 3)
+
+ds1 <- tibble(
+  Job.Type = rep("Teacher", numRows),
+  Industry.Type = rep("Education", numRows),
+  Career.Choice.Rank = factor(
+    x = sample(careerChoiceRanks, numRows, TRUE),
+    levels = careerChoiceRanks,
+    labels = careerChoiceRanks,
+    ordered = TRUE
+  )
+)
+
+print(ds1)
+
+```
+
+### Step 2a: Use the `tidyverse::dplyr` package to create frequency tallies.
+
+```{r ViewTallies}
+
+library(dplyr)
+
+ds1 %>%
+  group_by_all() %>% 
+  summarize(n = n())
+
+```
+
+### Step 2b: Use the `kableExtra` package to display the tables in an HTML-friendly manner. (Optional)
+
+In this step, the use of the `kableExtra` package's `kable()` function is completely optional and should only be used if you need/want to display the results in a web-page, RNotebook, Jupyter notebook, *etc.*
+
+Also, note that I was able to perform all of the following operations by using the `%>%` operator to create a pipeline by *chaining* the output of the previous operation as input to the next operation.
+
+1. Process the `ds1` data frame to show tallies and pass it to the `kableExtra()` function.
+
+1. Use the `kableExtra()` function to generate HTML output suitable for display in a webpage, then pass the output of the `kableExtra()` function.
+
+1. Use the `kable_styling()` function to apply style elements to the resulting HTML table to make it *responsive* in a UI sense and to make it more pleasing in appearance by adding borders and alternating colors.
+
+Note that the first 3 lines of the workflow shown here are exactly the same as shown above in **Step 2a**, with one exception: the terminal `%>%` operator. Here, the terminal `%>%` operator is used to feed the resulting data frame (which, technically speaking is actually a tibble) to the `kableExtra()` function.
+
+This ability to *chain* together operations and build up a pipeline one step at a time is one of the most powerful aspects of using the `tidyverse` for building modern data science pipelines.
+
+```{r ViewDataAsHTML}
+library(kableExtra)
+
+ds1 %>%
+  group_by_all() %>%                          # Tell dplyr which variables to use for grouping
+  summarize(n = n()) %>%                      # Compute the tallies for each variable group
+  kable() %>%                                 # Generate a table, which can be HTML, LaTeX
+  kable_styling(                              # Style the HTML table
+    bootstrap_options = c(                    # Pass in the options to be used by the Bootstrap framework
+      "striped"                               #    - Color each alternating row differently
+      ,"condensed"                            #    - Remove unnecessary space
+      ,"bordered"                             #    - Add line borders to all cells
+      ,"hover"                                #    - Change active cell color focus on hover
+    )
+  )
+
+```
+
+
+
+
+### Step 3: Use the `tidyverse::ggplot2` package to plot the results.
+```{r PlotFreq}
+
+library(ggplot2)
+library(scales)
+
+p1 <- ggplot(ds1, aes(x = Career.Choice.Rank, fill = Career.Choice.Rank)) +
+  geom_bar(color = "black", show.legend = FALSE) +
+  scale_fill_discrete() +
+  scale_y_continuous(breaks = seq(0, max(table(ds1$Career.Choice.Rank)) + 5, 2)) +
+  labs(
+    title = "Frequencies vs. Career Choice Ranks",
+    x = "Career Choice Rank",
+    y = "Frequencies (counts)"
+  )
+
+print(p1)
+
+```
+
+<div style="margin-bottom: 5em;"></div>

@@ -1,0 +1,11 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/820376/136cda01cf324bbc81f31c40bf5a45d7
+bundleId: https://api.rpubs.com/api/v1/document/820376/136cda01cf324bbc81f31c40bf5a45d7
+url: http://rpubs.com/thaufas/820376
+when: 1634321470.48028
+lastSyncTime: 1634321470.48028
